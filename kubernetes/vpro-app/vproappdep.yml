@@ -14,12 +14,12 @@ spec:
       labels:
         app: vproapp
     spec:
-      containers:  # <- Deve estar um nível abaixo de spec
+      containers:  
         - name: vproapp
           image: joao21011980/vprofileapp:latest
           ports:
             - name: vproapp-port
-              containerPort: 8080  # <- Ajuste na indentação de ports
+              containerPort: 8080  
       initContainers:
         - name: init-mydb
           image: busybox
