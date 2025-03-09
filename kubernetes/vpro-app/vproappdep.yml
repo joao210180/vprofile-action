@@ -1,9 +1,8 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: vproapp
-  labels:
+  labels: 
     app: vproapp
 spec:
   replicas: 1
@@ -15,26 +14,22 @@ spec:
       labels:
         app: vproapp
     spec:
-      containers:
+      containers:  # <- Deve estar um nível abaixo de spec
         - name: vproapp
           image: joao21011980/vprofileapp:latest
           ports:
             - name: vproapp-port
-              containerPort: 8080
-              initContainers: null
-            - name: init-mydb
-              image: busybox
-              command:
-                - sh
-                - -c
-                - until nslookup vprodb.$(cat
-                  /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local;
-                  do echo waiting for mydb; sleep 2; done;
-            - name: init-memcache
-              image: busybox
-              command:
-                - sh
-                - -c
-                - until nslookup vprocache01.$(cat
-                  /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local;
-                  do echo waiting for mydb; sleep 2; done;
+              containerPort: 8080  # <- Ajuste na indentação de ports
+      initContainers:
+        - name: init-mydb
+          image: busybox
+          command: 
+            - "sh"
+            - "-c"
+            - "until nslookup vprodb.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for mydb; sleep 2; done;"
+        - name: init-memcache
+          image: busybox
+          command: 
+            - "sh"
+            - "-c"
+            - "until nslookup vprocache01.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for mydb; sleep 2; done;"
